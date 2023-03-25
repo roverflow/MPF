@@ -25,7 +25,7 @@ class LoginUserSchema(BaseModel):
 
 class UserResponseSchema(UserBaseSchema):
     id: str
-    pass
+    pass 
 
 
 class UserResponse(BaseModel):
