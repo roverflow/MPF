@@ -16,6 +16,8 @@ from cloudinary.utils import cloudinary_url
 import cloudinary
 from typing import Annotated
 import numpy as np
+import json
+from ..serializers.helpers import users_serializer
 
 
 router = APIRouter()
@@ -48,17 +50,22 @@ async def register_missing_person(name: str, contact: str, fir: str, last_seen: 
 
         my_dict = {
             "name": name,
-            "contact": contact,
+            "contact_number": contact,
             "fir": fir,
             "last_seen": last_seen,
             "image_url" : url['url'],
-            "_id": datetime.now().strftime("%m/%d/%Y, %H:%M:%S"),
+            "_id": datetime.now().strftime('%s'),
             "secure_url": url["secure_url"],
+            # "embeddings": embeddings
         }
         MissingPerson.insert_one(my_dict)
         return { "status": "success", "missing_person": my_dict }
     except Exception as e:
         return {"status" : "fail" ,"message": e}
-    # finally:
-        # file.file.close()
+    finally:
+        file.file.close()
 
+@router.get('/get_missing_persons')
+def get_missing_persons():
+    missing_persons =  users_serializer(MissingPerson.find())
+    return {"status": "success", "missing_persons": missing_persons}
