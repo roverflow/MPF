@@ -8,6 +8,15 @@ from server.oauth2 import AuthJWT
 from server.database import User, MissingPerson
 from .. import schemas, oauth2
 from ..config import settings
+from fastapi import File, UploadFile
+from ..oauth2 import require_user
+from ..myutils.face_vectors import get_embeddings
+from cloudinary.uploader import upload
+from cloudinary.utils import cloudinary_url
+import cloudinary
+from typing import Annotated
+import numpy as np
+
 
 router = APIRouter()
 ACCESS_TOKEN_EXPIRES_IN = settings.ACCESS_TOKEN_EXPIRES_IN
@@ -19,28 +28,37 @@ def get_me(user_id: str = Depends(oauth2.require_user)):
     return {"status": "success", "user": user}
 
 @router.post('/register_missing_person', status_code=status.HTTP_201_CREATED)
-async def register_missing_person(payload: schemas.MissingPerson, response: Response, Authorize: AuthJWT = Depends()):
-    
+async def register_missing_person(name: str, contact: str, fir: str, last_seen: str , file : Annotated[UploadFile, File()], Authorize: AuthJWT = Depends()):
     try:
-        Authorize.jwt_refresh_token_required()
+        require_user(Authorize)
+    except:
+        raise HTTPException(status_code=401, detail="You are not logged in")
+    print("here")
+    cloudinary.config(
+        cloud_name = "demgacv6k",
+        api_key = "137451977666999",
+        api_secret = "2kIpFYe0d4-ckLuEnBVRrkaPL2o",
+        secure = True
+    )
+    try:
+        contents = file.file.read()
+        url = upload(contents, folder="missing_persons")
+        # embeddings = get_embeddings([np.frombuffer(contents, dtype=np.uint8)])
+        # print(embeddings)
 
-        user_id = Authorize.get_jwt_subject()
-        if not user_id:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='Could not refresh access token')
-        user = userEntity(User.find_one({'_id': ObjectId(str(user_id))}))
-        if not user:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
-                                detail='The user belonging to this token no logger exist')
-        access_token = Authorize.create_access_token(
-            subject=str(user["id"]), expires_time=timedelta(minutes=ACCESS_TOKEN_EXPIRES_IN))
+        my_dict = {
+            "name": name,
+            "contact": contact,
+            "fir": fir,
+            "last_seen": last_seen,
+            "image_url" : url['url'],
+            "_id": datetime.now().strftime("%m/%d/%Y, %H:%M:%S"),
+            "secure_url": url["secure_url"],
+        }
+        MissingPerson.insert_one(my_dict)
+        return { "status": "success", "missing_person": my_dict }
     except Exception as e:
-        error = e.__class__.__name__
-        if error == 'MissingTokenError':
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, detail='Please provide refresh token')
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail=error)
-        #Check if user already exist
-    result = MissingPerson.insert_one(payload.dict())
-    return {"status": "success"}
+        return {"status" : "fail" ,"message": e}
+    # finally:
+        # file.file.close()
+

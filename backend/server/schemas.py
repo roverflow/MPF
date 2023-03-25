@@ -32,9 +32,10 @@ class UserResponse(BaseModel):
     status: str
     user: UserResponseSchema
 
-class MissingPerson(BaseModel):
+class Missing(BaseModel):
     name: str
-    image_url: str
+    # image_url: str
+    last_seen: str
     fir_num: int
     contact_number: int
 
