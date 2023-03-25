@@ -3,7 +3,7 @@ import pymongo
 from .config import settings
 
 client = mongo_client.MongoClient(
-    "mongodb://newuser:password123@mongox:27017/", serverSelectionTimeoutMS=5000)
+    "mongodb://newuser:password123@mongopes:27017/", serverSelectionTimeoutMS=5000)
 
 try:
     conn = client.server_info()
