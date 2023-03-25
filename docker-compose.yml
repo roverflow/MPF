@@ -15,7 +15,7 @@ services:
       - ./backend/server/.env
   db:
     image: mongo:latest
-    container_name: mongox
+    container_name: mongopes
     environment:
       MONGO_INITDB_ROOT_USERNAME: newuser
       MONGO_INITDB_ROOT_PASSWORD: password123
