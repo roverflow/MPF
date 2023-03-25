@@ -7,6 +7,8 @@ import gridfs
 import cv2
 from bson.objectid import ObjectId
 
+
+
 realTimeFaces = realtimeFaceVectors.find({}, {"embeddings":1,'frame':1,"location":1, "_id":0})
 real_time_embedds = []
 real_time_frames = []
@@ -40,8 +42,7 @@ for i in realTimeFaces:
     real_time_location.append(location)
     real_time_embedds.append(em)
 
-d = len(real_time_embedds) / 5
-r = len(real_time_embedds) % 5
+
 
 def  check_similarity_with_database(face_vector, faceid):
       score =  is_match(face_vector, faceid)
@@ -54,26 +55,39 @@ def is_match(real_time_embedds, missing_embedds, thresh=0.5):
     score = (1-score)*100
     return score
 
-for index, i in enumerate(real_time_embedds):
-     for ind, j in enumerate(missing_embedds):
-          score = is_match(i[0], j[0])
-          if score >= 50.0:
-               person = foundPerson.find({"_id": str(missing_ids[ind])})
-               if len(list(person)):
-                    
-                    for a in person:
-                        if 'found' in a.keys():
-                            a['found'].append({'score':score,'real_time_location':real_time_location[index],'real_time_frames':real_time_frames[index]})
+def find_match(real_time_embedds,missing_embedds):
+     for index, i in enumerate(real_time_embedds):
+        
+        for ind, j in enumerate(missing_embedds):
+            
+            score = is_match(i[0], j[0])
+            if score >= 50.0:
+                person = foundPerson.find_one({"_id": str(missing_ids[ind])})
+               
+                if person != None  :
+                        if 'found' in person.keys():
+                            person['found'].append({'score':score,'real_time_location':real_time_location[index],'real_time_frames':real_time_frames[index]})
                         else:
+                            person['found'] = [{'score':score,'real_time_location':real_time_location[index],'real_time_frames':real_time_frames[index]}]
+                        result = foundPerson.update_one({"_id": str(missing_ids[ind])}, {"$set":person})                  
+                        print(result.raw_result)
+                else :
+                        print("Hi")
+                        person = MissingPerson.find({"_id": str(missing_ids[ind])})
+                        for a in person:
                             a['found'] = [{'score':score,'real_time_location':real_time_location[index],'real_time_frames':real_time_frames[index]}]
-                        foundPerson.update_one({"_id": str(missing_ids[ind])}, {"$set":
-        {a} # new value will be 42
-    })
-               else :
-                    person = MissingPerson.find({"_id": str(missing_ids[ind])})
-                    for a in person:
-                        a['found'] = [{'score':score,'real_time_location':real_time_location[index],'real_time_frames':real_time_frames[index]}]
-                        foundPerson.insert_one(a)
-                    
-                    
-               print(score,real_time_location[index], missing_ids[ind] )
+                            foundPerson.insert_one(a)
+total_num = len(real_time_embedds)
+
+
+if total_num < 10:
+    find_match(real_time_embedds[0:total_num],missing_embedds)
+else:
+    d =int(len(real_time_embedds) / 10)
+    r = int(len(real_time_embedds) % 10)
+    start= 0
+    for i in range(0, d):
+         find_match(real_time_embedds[start: start+10],missing_embedds)
+         start= start+10
+    find_match(real_time_embedds[-r:],missing_embedds)
+     
