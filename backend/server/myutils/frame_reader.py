@@ -4,9 +4,10 @@ import cv2
 import time 
 from face_vectors import get_embeddings
 from datetime import datetime 
-from server.database import realtimeFaceVectors, streamLinks
+from server.database import realtimeFaceVectors, streamLinks,db
 from multiprocessing import Process
-
+import io
+import gridfs
 def read_frame(path, location):
     print("Process with stream link :", path , "Started")
     embeddings = []
@@ -16,18 +17,23 @@ def read_frame(path, location):
         print(frame.shape)
         if frame is None:
             break
-       
+        image_bytes = cv2.imencode('.jpg', frame)[1].tobytes()
+
+# Store the image in MongoDB using GridFS
+        fs = gridfs.GridFS(db)
+        file_id = fs.put(image_bytes, filename='myimage.jpg')
         embeddings = get_embeddings([frame])
-        print(embeddings)
+        print(len(embeddings),embeddings)
         if embeddings != [[]]:
             embeddings = embeddings.tolist()
             my_dict = {
-                "_id": str(datetime.now().strftime('%s'))+"location",
+                "_id": str(datetime.now().strftime('%s'))+location,
                 "embeddings": embeddings,
-                'location':location
+                'location':location,
+                'frame':file_id
             }
             realtimeFaceVectors.insert_one(my_dict)
-            print( { "status": "success", "missing_person": my_dict } )
+            #{ "status": "success", "missing_person": my_dict } 
         time.sleep(5)
     stream.stop()
 
