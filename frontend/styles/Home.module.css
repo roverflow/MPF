@@ -129,6 +129,7 @@
 
 .authx {
   margin-top: 5rem;
+  display: flex;
 }
 
 .center::before {
