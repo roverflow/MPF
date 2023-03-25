@@ -4,6 +4,7 @@ from pydantic import BaseModel, EmailStr, constr
 
 class UserBaseSchema(BaseModel):
     email: str
+    role: str
     created_at: datetime | None = None
     updated_at: datetime | None = None
 
