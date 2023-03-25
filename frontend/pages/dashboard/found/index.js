@@ -45,7 +45,7 @@ const ShowMissing = () => {
                 return (
                   <div
                     className="card"
-                    style={{ width: "18rem", color: "black", margin: "10px" }}
+                    style={{ width: "18rem", color: "black" }}
                   >
                     <img
                       className="card-img-top"
