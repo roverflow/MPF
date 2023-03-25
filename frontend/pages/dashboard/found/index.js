@@ -10,9 +10,9 @@ const ShowMissing = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/users/get_missing_persons")
+      .get("http://localhost:8000/api/users/found_person")
       .then((res) => {
-        setMissing(res.data.missing_persons);
+        setMissing(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -39,7 +39,7 @@ const ShowMissing = () => {
               </Link>
             </div>
           </div>
-          <div className={styles.authx}>
+          <div className={styles.authxy} style={{ marginTop: "1rem" }}>
             {missing &&
               missing.map((item) => {
                 return (
@@ -56,8 +56,18 @@ const ShowMissing = () => {
                       <h5 className="card-title">{item.name}</h5>
                       <div className="card-text">Contact: {item.contact}</div>
                       <div className="card-text">FIR: {item.fir}</div>
-                      <div className="card-text">
-                        LastSeen: {item.last_seen}
+                      <div>
+                        {item.found.map((i, index) => {
+                          if (index > 2) {
+                            return;
+                          }
+                          return (
+                            <div className="card-text">
+                              Found at: {i.url} , Accuracy: {i.score}
+                              <br />
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>

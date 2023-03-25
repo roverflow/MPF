@@ -5,7 +5,7 @@ from fastapi import APIRouter, Response, status, Depends, HTTPException
 from server.serializers.userSerializers import userEntity, userResponseEntity
 from datetime import datetime, timedelta
 from server.oauth2 import AuthJWT
-from server.database import User, MissingPerson
+from server.database import User, MissingPerson, FoundList
 from .. import schemas, oauth2
 from ..config import settings
 from fastapi import File, UploadFile
@@ -17,7 +17,7 @@ import cloudinary
 from typing import Annotated
 import numpy as np
 import json
-from ..serializers.helpers import users_serializer
+from ..serializers.helpers import users_serializer, found_serializer
 import cv2
 from io import BytesIO
 from PIL import Image
@@ -66,3 +66,8 @@ async def register_missing_person(name: str, contact: str, fir: str, last_seen: 
 def get_missing_persons():
     missing_persons =  users_serializer(MissingPerson.find())
     return {"status": "success", "missing_persons": missing_persons}
+
+@router.get('/found_person')
+def found_person():
+    found = found_serializer(FoundList.find())
+    return found
