@@ -17,8 +17,8 @@ User = db.users
 
 
 MissingPerson = db.missingperson
-MissingPerson.create_index([("contact_number", pymongo.ASCENDING)], unique=True)
+#MissingPerson.create_index([("contact_number", pymongo.ASCENDING)], unique=True)
 
 realtimeFaceVectors = db.realFacesV
-MissingPerson = db.foundPersons
+foundPerson = db.foundPersons
 streamLinks = db.streamlinks
