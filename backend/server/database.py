@@ -13,12 +13,12 @@ except Exception:
 
 db = client[settings.MONGO_INITDB_DATABASE]
 User = db.users
-User.create_index([("email", pymongo.ASCENDING)], unique=True)
+#User.create_index([("email", pymongo.ASCENDING)], unique=True)
 
 
 MissingPerson = db.missingperson
-MissingPerson.create_index([("contact_number", pymongo.ASCENDING)], unique=True)
+#MissingPerson.create_index([("contact_number", pymongo.ASCENDING)], unique=True)
 
 realtimeFaceVectors = db.realFacesV
-
+foundPerson = db.foundPersons
 streamLinks = db.streamlinks
