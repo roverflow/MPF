@@ -23,3 +23,5 @@ mtcnn
 git+https://github.com/nShravankg/Keras_Vggface.git
 keras_applications
 cloudinary
+yt-dlp
+git+https://github.com/abhiTronix/vidgear.git

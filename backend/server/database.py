@@ -19,3 +19,6 @@ User.create_index([("email", pymongo.ASCENDING)], unique=True)
 MissingPerson = db.missingperson
 MissingPerson.create_index([("contact_number", pymongo.ASCENDING)], unique=True)
 
+realtimeFaceVectors = db.realFacesV
+
+streamLinks = db.streamlinks
