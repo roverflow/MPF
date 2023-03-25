@@ -3,14 +3,7 @@ from pydantic import BaseModel, EmailStr, constr
 
 
 class UserBaseSchema(BaseModel):
-    name: str
     email: str
-    photo: str
-    usn: str
-    sem: str
-    branch: str
-    section: str
-    role: str | None = None
     created_at: datetime | None = None
     updated_at: datetime | None = None
 
