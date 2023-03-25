@@ -130,8 +130,15 @@
 .authx {
   margin-top: 5rem;
   display: flex;
+  max-width: 100%;
+  flex-direction: row;
 }
 
+.authxy {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap:20px;
+}
 .center::before {
   background: var(--secondary-glow);
   border-radius: 50%;

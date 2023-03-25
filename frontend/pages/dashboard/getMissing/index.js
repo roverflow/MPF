@@ -39,18 +39,19 @@ const ShowMissing = () => {
               </Link>
             </div>
           </div>
-          <div className={styles.authx}>
+          <div className={styles.authxy}>
             {missing &&
               missing.map((item) => {
                 return (
                   <div
                     className="card"
-                    style={{ width: "18rem", color: "black", margin: "10px" }}
+                    style={{ width: "18rem", color: "black", margin: "30px"}}
                   >
                     <img
                       className="card-img-top"
                       src={item.url}
                       alt="Card image cap"
+                      height={300}
                     />
                     <div className={`card-body ${styles.code}`}>
                       <h5 className="card-title">{item.name}</h5>
