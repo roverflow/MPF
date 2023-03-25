@@ -42,6 +42,5 @@ async def register_missing_person(payload: schemas.MissingPerson, response: Resp
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=error)
         #Check if user already exist
-    print(user["id"])
     result = MissingPerson.insert_one(payload.dict())
     return {"status": "success"}

@@ -25,10 +25,18 @@ class LoginUserSchema(BaseModel):
 
 class UserResponseSchema(UserBaseSchema):
     id: str
-    pass
+    pass 
 
 
 class UserResponse(BaseModel):
     status: str
     user: UserResponseSchema
 
+class MissingPerson(BaseModel):
+    name: str
+    image_url: str
+    fir_num: int
+    contact_number: int
+
+    class Config:
+        orm_mode = True
