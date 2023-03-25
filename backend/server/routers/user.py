@@ -18,7 +18,9 @@ from typing import Annotated
 import numpy as np
 import json
 from ..serializers.helpers import users_serializer
-
+import cv2
+from io import BytesIO
+from PIL import Image
 
 router = APIRouter()
 ACCESS_TOKEN_EXPIRES_IN = settings.ACCESS_TOKEN_EXPIRES_IN
@@ -35,7 +37,6 @@ async def register_missing_person(name: str, contact: str, fir: str, last_seen: 
         require_user(Authorize)
     except:
         raise HTTPException(status_code=401, detail="You are not logged in")
-    print("here")
     cloudinary.config(
         cloud_name = "demgacv6k",
         api_key = "137451977666999",
@@ -45,9 +46,9 @@ async def register_missing_person(name: str, contact: str, fir: str, last_seen: 
     try:
         contents = file.file.read()
         url = upload(contents, folder="missing_persons")
-        # embeddings = get_embeddings([np.frombuffer(contents, dtype=np.uint8)])
-        # print(embeddings)
-
+        pil_image = Image.open(BytesIO(contents))
+        numpy_array = cv2.cvtColor(np.array(pil_image), cv2.COLOR_RGBA2BGR)
+        embeddings = get_embeddings([numpy_array])
         my_dict = {
             "name": name,
             "contact_number": contact,
@@ -56,7 +57,7 @@ async def register_missing_person(name: str, contact: str, fir: str, last_seen: 
             "image_url" : url['url'],
             "_id": datetime.now().strftime('%s'),
             "secure_url": url["secure_url"],
-            # "embeddings": embeddings
+            "embeddings": embeddings
         }
         MissingPerson.insert_one(my_dict)
         return { "status": "success", "missing_person": my_dict }
