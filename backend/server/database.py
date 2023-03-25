@@ -22,3 +22,4 @@ MissingPerson = db.missingperson
 realtimeFaceVectors = db.realFacesV
 foundPerson = db.foundPersons
 streamLinks = db.streamlinks
+FoundList = db.foundPersons
