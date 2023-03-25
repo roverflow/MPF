@@ -4,6 +4,10 @@ import Link from "next/link";
 import styles from "@/styles/Home.module.css";
 import Layout from "@/layouts/Layout";
 import axios from "axios";
+import { useRouter } from "next/router";
+
+
+const router = useRouter(); 
 
 const UploadMissing = () => {
   const [name, setName] = useState("");
@@ -11,6 +15,7 @@ const UploadMissing = () => {
   const [lastSeen, setLastSeen] = useState("");
   const [fir, setFir] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
+  
 
   const fileSelectedHandler = (event) => {
     console.log(event.target.files[0]);
@@ -40,6 +45,7 @@ const UploadMissing = () => {
       })
       .then((response) => {
         console.log(response);
+        router.push("/dashboard/getMissing");
       })
       .catch((error) => {
         console.log(error);
