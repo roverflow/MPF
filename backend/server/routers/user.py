@@ -32,11 +32,7 @@ def get_me(user_id: str = Depends(oauth2.require_user)):
     return {"status": "success", "user": user}
 
 @router.post('/register_missing_person', status_code=status.HTTP_201_CREATED)
-async def register_missing_person(name: str, contact: str, fir: str, last_seen: str , file : Annotated[UploadFile, File()], Authorize: AuthJWT = Depends()):
-    try:
-        require_user(Authorize)
-    except:
-        raise HTTPException(status_code=401, detail="You are not logged in")
+async def register_missing_person(name: str, contact: str, fir: str, last_seen: str , file : Annotated[UploadFile, File()]):
     cloudinary.config(
         cloud_name = "demgacv6k",
         api_key = "137451977666999",
