@@ -49,18 +49,13 @@ export default function Home() {
               <p className={inter.className}>Upload your missing person.</p>
             </Link>
 
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-              className={styles.card}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <Link href={`/dashboard/getMissing`} className={styles.card}>
               <h2 className={inter.className}>
                 List
                 {/* <span>-&gt;</span> */}
               </h2>
               <p className={inter.className}>List all your missing people.</p>
-            </a>
+            </Link>
 
             <a
               href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"

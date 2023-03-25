@@ -57,7 +57,7 @@ async def register_missing_person(name: str, contact: str, fir: str, last_seen: 
             "image_url" : url['url'],
             "_id": datetime.now().strftime('%s'),
             "secure_url": url["secure_url"],
-            "embeddings": embeddings
+            "embeddings": embeddings.tolist()
         }
         MissingPerson.insert_one(my_dict)
         return { "status": "success", "missing_person": my_dict }
