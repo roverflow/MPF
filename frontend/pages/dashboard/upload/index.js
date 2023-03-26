@@ -4,6 +4,7 @@ import Link from "next/link";
 import styles from "@/styles/Home.module.css";
 import Layout from "@/layouts/Layout";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 const UploadMissing = () => {
   const [name, setName] = useState("");
@@ -12,34 +13,32 @@ const UploadMissing = () => {
   const [fir, setFir] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
 
+  const router = useRouter();
   const fileSelectedHandler = (event) => {
     console.log(event.target.files[0]);
     setSelectedFile(event.target.files[0]);
   };
 
   const fileUploadHandler = () => {
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("contact", contact);
-    formData.append("last_seen", lastSeen);
-    formData.append("fir", fir);
-    formData.append("file", selectedFile);
-    const queryStr = new URLSearchParams(formData).toString();
     axios
-      .post("http://localhost:8000/api/users/register_missing_person", {file : selectedFile}, {
-        params : {
-          name : name,
-          contact : contact,
-          last_seen : lastSeen,
-          fir : fir,
-        },
-        headers: {
-          "Content-Type": "multipart/form-data",
+      .post(
+        "http://localhost:8000/api/users/register_missing_person",
+        { file: selectedFile },
+        {
+          params: {
+            name: name,
+            contact: contact,
+            last_seen: lastSeen,
+            fir: fir,
+          },
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
-
-      })
+      )
       .then((response) => {
         console.log(response);
+        router.push("/dashboard/getMissing");
       })
       .catch((error) => {
         console.log(error);

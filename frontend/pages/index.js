@@ -57,31 +57,21 @@ export default function Home() {
               <p className={inter.className}>List all your missing people.</p>
             </Link>
 
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-              className={styles.card}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <Link href={`/dashboard/found`} className={styles.card}>
               <h2 className={inter.className}>
                 Found
                 {/* <span>-&gt;</span> */}
               </h2>
               <p className={inter.className}>View found people.</p>
-            </a>
+            </Link>
 
-            <a
-              href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-              className={styles.card}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <Link href={`/dashboard/profile`} className={styles.card}>
               <h2 className={inter.className}>
                 Profile
                 {/* <span>-&gt;</span> */}
               </h2>
               <p className={inter.className}>View your profile.</p>
-            </a>
+            </Link>
           </div>
         </main>
       </Layout>
