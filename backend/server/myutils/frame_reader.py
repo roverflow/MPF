@@ -12,10 +12,12 @@ def read_frame(path, location):
     print("Process with stream link :", path , "Started")
     embeddings = []
     while True:
-        stream = CamGear(source=path, stream_mode = True, logging=True).start()
+        options = {"THREADED_QUEUE_MODE" : True}
+        stream = CamGear(source=path, stream_mode = True,logging=True).start()
         frame = stream.read()
         print(frame.shape)
         if frame is None:
+            print("Frame is none")
             break
         image_bytes = cv2.imencode('.jpg', frame)[1].tobytes()
 
@@ -32,9 +34,10 @@ def read_frame(path, location):
                 'location':location,
                 'frame':file_id
             }
+            cv2.imwrite("Image.jpg",frame)
             realtimeFaceVectors.insert_one(my_dict)
             #{ "status": "success", "missing_person": my_dict } 
-        time.sleep(5)
+        time.sleep(10)
     stream.stop()
 
 
