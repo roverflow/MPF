@@ -34,3 +34,29 @@ services:
       - ./frontend:/app
     depends_on:
       - backend
+  
+  runner:
+    build:
+      context: ./backend
+      dockerfile: DockerfileRunner
+    volumes:
+      - ./backend:/app
+    env_file:
+      - ./backend/server/.env
+    depends_on:
+      - db
+      - backend
+      - frontend
+  processor:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile-process
+    volumes:
+      - ./backend:/app
+    env_file:
+      - ./backend/server/.env
+    depends_on:
+      - db
+      - backend
+      - frontend
+
