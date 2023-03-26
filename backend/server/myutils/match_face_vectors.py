@@ -58,7 +58,7 @@ def find_match(real_time_embedds,missing_embedds):
         for ind, j in enumerate(missing_embedds):
             
             score = is_match(i[0], j[0])
-            if score >= 50.0:
+            if score >= 70.0:
                 person = foundPerson.find_one({"_id": str(missing_ids[ind])})
                 print(real_time_ids[index])
                 if person != None  :

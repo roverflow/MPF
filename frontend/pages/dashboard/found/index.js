@@ -63,7 +63,7 @@ const ShowMissing = () => {
                           }
                           return (
                             <div className="card-text">
-                              Found at: {i.url} , Accuracy: {i.score}
+                              Found at: {i.url}
                               <br />
                             </div>
                           );
